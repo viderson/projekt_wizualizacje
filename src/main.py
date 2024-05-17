@@ -1,4 +1,5 @@
 import pygame
+import time
 
 from ui import *
 
@@ -16,8 +17,14 @@ pygame.font.init()
 pygame.event.set_grab(True)  # Capture all input
 
 screen = pygame.display.set_mode(size=(720, 640))
-clock = pygame.time.Clock()
-font = pygame.font.SysFont('./Roboto.ttf', 30)
+clock  = pygame.time.Clock()
+font   = pygame.font.SysFont('./Roboto.ttf', 30)
+
+target_fps = 30
+target_frame_time = 1/target_fps 
+frame_time = 0
+frame_begin_time = time.time()
+frame_end_time   = time.time()
 
 ui = UI()
 ui.screen = screen
@@ -49,21 +56,35 @@ while is_running:
     # Update
     mouse_pos = pygame.mouse.get_pos()
     ui.mouse_pos = mouse_pos
+    screen_dim = screen.get_size()
 
     ########################################
     # Render
     screen.fill((255, 255, 255))
 
-    fps_g = font.render(f'FPS: {clock.get_fps():.0f}', True, (0, 255, 0))
-    screen.blit(fps_g, (0,0))
+    fps_text = font.render(f'FPS: {1/frame_time if frame_time != 0 else 0:.2f}', True, (0, 255, 0))
+    screen.blit(fps_text, (0,0))
 
-    if button(ui, 'WIELKI KUTAS###1', pygame.Rect(100, 100, 200, 100)):
-        print("Clicked")
+    # UI
+    # TODO(Pawel Hermansdorfer): Get font with these symbols https://iconly.io/
+    if button(ui, "-###SCALE_UP", pygame.Rect(screen_dim[0] - 25, screen_dim[1] - 25, 20, 20)):
+        print("-")
 
-    if button(ui, 'WIELKI KUTAS###2', pygame.Rect(300, 300, 200, 100)):
+    if button(ui, "+###SCALE_DOWN", pygame.Rect(screen_dim[0] - 50, screen_dim[1] - 25, 20, 20)):
+        print("+")
+
+    if button(ui, 'WIELKI KUTAS###1', pygame.Rect(10, 50, 200, 100)):
         print("Clicked")
 
     pygame.display.flip()
-    clock.tick(30)
+
+    ########################################
+    # Limit frame rate
+    elapsed_time = time.time() - frame_begin_time
+    if elapsed_time < target_frame_time:
+        time.sleep(target_frame_time - elapsed_time)
+    frame_end_time = time.time()
+    frame_time = frame_end_time - frame_begin_time
+    frame_begin_time = frame_end_time
 
 pygame.quit()

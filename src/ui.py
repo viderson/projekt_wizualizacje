@@ -33,22 +33,24 @@ def draw_ui_element(ui, text_with_id, rect,
     elif ui.HOT_BUTTON == button_id:
         ui.HOT_BUTTON = None
 
+    roundenss = int(min(rect.width/10, rect.height/10))
+
     # Draw shadow
     if draw_shadow:
         shadow_color = (10, 10, 10)
         pygame.draw.rect(ui.screen, shadow_color, pygame.Rect(rect.left + 2, rect.top + 2, rect.width, rect.height),
-                         border_radius=10)
+                         border_radius=roundenss)
 
     # Draw bg
     if draw_bg:
         bg_color = (80, 80, 80)
         if ui.ACTIVE_BUTTON == button_id: bg_color = (40, 40, 40)
         elif ui.HOT_BUTTON == button_id:  bg_color = (60, 60, 60)
-        pygame.draw.rect(ui.screen, bg_color, rect, border_radius=10)
+        pygame.draw.rect(ui.screen, bg_color, rect, border_radius=roundenss)
 
     if draw_border:
         border_color = (110, 110, 110)
-        pygame.draw.rect(ui.screen, border_color, rect, width=2, border_radius=10)
+        pygame.draw.rect(ui.screen, border_color, rect, width=2, border_radius=roundenss)
 
     # Draw text
     if draw_text:
