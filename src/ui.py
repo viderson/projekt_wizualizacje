@@ -17,21 +17,24 @@ def draw_ui_element(ui, text_with_id, rect,
                     draw_text=False,
                     draw_border=False,
                     draw_shadow=False):
-    text, button_id = text_with_id.split("###")
     result = False
-    if ui.ACTIVE_BUTTON == button_id:
+    text, button_id = text_with_id.split("###")
+    is_hot = ui.HOT_BUTTON == button_id
+    is_active = ui.ACTIVE_BUTTON == button_id
+    if is_active:
         if ui.mouse_up:
-            if ui.HOT_BUTTON: 
+            ui.ACTIVE_BUTTON = None
+            if is_hot: 
                 result = True
-                ui.ACTIVE_BUTTON = 0
-    elif ui.HOT_BUTTON == button_id:
+    elif is_hot:
         if ui.mouse_down:
             ui.ACTIVE_BUTTON = button_id
 
     if (rect.left <= ui.mouse_pos[0] and ui.mouse_pos[0] <= rect.right) and (rect.top <= ui.mouse_pos[1] and ui.mouse_pos[1] <= rect.bottom):
         ui.HOT_BUTTON = button_id
-    elif ui.HOT_BUTTON == button_id:
+    elif is_hot:
         ui.HOT_BUTTON = None
+
 
     roundenss = int(min(rect.width/10, rect.height/10))
 

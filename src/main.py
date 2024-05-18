@@ -26,10 +26,11 @@ clock  = pygame.time.Clock()
 font   = pygame.font.SysFont('./Roboto.ttf', 30)
 
 map_img = pygame.image.load("./suczki.png").convert()
-map_size = map_img.get_size()
-map_scale = 1
+map_original_dim = map_img.get_size()
 map_offset = (0, 0)
-scaled_map = scale_map(map_img, map_size, map_scale)
+map_scale = 1
+scaled_map = scale_map(map_img, map_original_dim, map_scale)
+scaled_map_dim = scaled_map.get_size()
 
 target_fps = 30
 target_frame_time = 1/target_fps 
@@ -56,14 +57,16 @@ while is_running:
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             ui.mouse_down = True
-            mouse_dragged = True
-            mouse_drag_start = pygame.mouse.get_pos()
+            if ui.HOT_BUTTON == None and ui.ACTIVE_BUTTON == None:
+                mouse_dragged = True
+                mouse_drag_start = pygame.mouse.get_pos()
 
         elif event.type == pygame.MOUSEBUTTONUP:
             ui.mouse_up = True
             mouse_dragged = False
-            map_offset = (map_offset[0] + (mouse_pos[0] - mouse_drag_start[0]),
-                          map_offset[1] + (mouse_pos[1] - mouse_drag_start[1]))
+            if ui.HOT_BUTTON == None and ui.ACTIVE_BUTTON == None:
+                map_offset = (map_offset[0] + (mouse_pos[0] - mouse_drag_start[0]),
+                              map_offset[1] + (mouse_pos[1] - mouse_drag_start[1]))
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN and alt_is_pressed:
@@ -85,7 +88,9 @@ while is_running:
         offset = (map_offset[0] + (mouse_pos[0] - mouse_drag_start[0]),
                   map_offset[1] + (mouse_pos[1] - mouse_drag_start[1]))
     else: offset = map_offset
-    screen.blit(scaled_map, offset)
+    blit_pos = (screen_dim[0]/2 - scaled_map_dim[0]/2 + offset[0],
+                screen_dim[1]/2 - scaled_map_dim[1]/2 + offset[1])
+    screen.blit(scaled_map,  blit_pos)
 
     fps_text = font.render(f'FPS: {1/frame_time if frame_time != 0 else 0:.2f}', True, (0, 255, 0))
     screen.blit(fps_text, (0,0))
@@ -94,11 +99,13 @@ while is_running:
     # TODO(Pawel Hermansdorfer): Get font with these symbols https://iconly.io/
     if button(ui, "-###SCALE_UP", pygame.Rect(screen_dim[0] - 25, screen_dim[1] - 25, 20, 20)):
         map_scale -= 0.25
-        scaled_map = scale_map(map_img, map_size, map_scale)
+        scaled_map = scale_map(map_img, map_original_dim, map_scale)
+        scaled_map_dim = scaled_map.get_size()
 
     if button(ui, "+###SCALE_DOWN", pygame.Rect(screen_dim[0] - 50, screen_dim[1] - 25, 20, 20)):
         map_scale += 0.25
-        scaled_map = scale_map(map_img, map_size, map_scale)
+        scaled_map = scale_map(map_img, map_original_dim, map_scale)
+        scaled_map_dim = scaled_map.get_size()
 
     if button(ui, 'CENTER###CENTER', pygame.Rect(0, 0, 200, 100)):
         map_offset = (0, 0)
