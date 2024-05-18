@@ -48,6 +48,7 @@ def draw_ui_element(ui, text_with_id, rect,
         elif ui.HOT_BUTTON == button_id:  bg_color = (60, 60, 60)
         pygame.draw.rect(ui.screen, bg_color, rect, border_radius=roundenss)
 
+    # Draw border
     if draw_border:
         border_color = (110, 110, 110)
         pygame.draw.rect(ui.screen, border_color, rect, width=2, border_radius=roundenss)
@@ -68,7 +69,7 @@ def draw_ui_element(ui, text_with_id, rect,
     return result
 
 def button(ui, text_with_id, rect):
-    draw_ui_element(ui, text_with_id, rect, draw_bg=True,
-                                            draw_text=True,
-                                            draw_shadow=True,
-                                            draw_border=True)
+    return draw_ui_element(ui, text_with_id, rect, draw_bg=True,
+                                                   draw_text=True,
+                                                   draw_shadow=True,
+                                                   draw_border=True)
