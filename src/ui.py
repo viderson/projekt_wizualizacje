@@ -10,7 +10,7 @@ class UI:
     font   = None
 
     def __init__(self):
-        self.font = pygame.font.SysFont('./Roboto.ttf', 64)
+        self.font = pygame.font.SysFont('./ClearSans-Bold.ttf', 64)
 
 def draw_ui_element(ui, text_with_id, rect,
                     draw_bg=False,

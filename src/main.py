@@ -65,8 +65,8 @@ while is_running:
             ui.mouse_up = True
             mouse_dragged = False
             if ui.HOT_BUTTON == None and ui.ACTIVE_BUTTON == None:
-                map_offset = (map_offset[0] + (mouse_pos[0] - mouse_drag_start[0]),
-                              map_offset[1] + (mouse_pos[1] - mouse_drag_start[1]))
+                map_offset = (map_offset[0] + 1/map_scale * (mouse_pos[0] - mouse_drag_start[0]),
+                              map_offset[1] + 1/map_scale * (mouse_pos[1] - mouse_drag_start[1]))
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN and alt_is_pressed:
@@ -85,11 +85,11 @@ while is_running:
     screen.fill((255, 255, 255))
 
     if mouse_dragged:
-        offset = (map_offset[0] + (mouse_pos[0] - mouse_drag_start[0]),
-                  map_offset[1] + (mouse_pos[1] - mouse_drag_start[1]))
+        offset = (map_offset[0] + 1/map_scale * (mouse_pos[0] - mouse_drag_start[0]),
+                  map_offset[1] + 1/map_scale * (mouse_pos[1] - mouse_drag_start[1]))
     else: offset = map_offset
-    blit_pos = (screen_dim[0]/2 - scaled_map_dim[0]/2 + offset[0],
-                screen_dim[1]/2 - scaled_map_dim[1]/2 + offset[1])
+    blit_pos = (screen_dim[0]/2 - scaled_map_dim[0]/2 + offset[0]*map_scale,
+                screen_dim[1]/2 - scaled_map_dim[1]/2 + offset[1]*map_scale)
     screen.blit(scaled_map,  blit_pos)
 
     fps_text = font.render(f'FPS: {1/frame_time if frame_time != 0 else 0:.2f}', True, (0, 255, 0))
@@ -109,6 +109,9 @@ while is_running:
 
     if button(ui, 'CENTER###CENTER', pygame.Rect(0, 0, 200, 100)):
         map_offset = (0, 0)
+        map_scale = 1
+        scaled_map = scale_map(map_img, map_original_dim, map_scale)
+        scaled_map_dim = scaled_map.get_size()
 
     pygame.display.flip()
 
