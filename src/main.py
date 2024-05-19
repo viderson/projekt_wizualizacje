@@ -23,7 +23,7 @@ pygame.event.set_grab(True)  # Capture all input
 screen = pygame.display.set_mode(size=(720, 640))
 pygame.display.set_caption('TITLE ME!!!')
 clock  = pygame.time.Clock()
-font   = pygame.font.Font('./Roboto.ttf', 30)
+font   = pygame.font.Font('./Roboto.ttf', 18)
 
 font_icons = pygame.font.Font('./iconly.ttf', 64)
 ICON_PLUS = '\uE000'
@@ -102,17 +102,17 @@ while is_running:
     screen.blit(fps_text, (0,0))
 
     # UI
-    if button(ui, ICON_MINUS + "###SCALE_DOWN", pygame.Rect(screen_dim[0] - 25, screen_dim[1] - 25, 20, 20), font_icons):
+    if button(ui, ICON_MINUS + "###SCALE_DOWN", pygame.Rect(screen_dim[0] - 35, screen_dim[1] - 35, 30, 30), font_icons):
         map_scale -= 0.25
         scaled_map = scale_map(map_img, map_original_dim, map_scale)
         scaled_map_dim = scaled_map.get_size()
 
-    if button(ui, ICON_PLUS + "###SCALE_UP", pygame.Rect(screen_dim[0] - 50, screen_dim[1] - 25, 20, 20), font_icons):
+    if button(ui, ICON_PLUS + "###SCALE_UP", pygame.Rect(screen_dim[0] - 75, screen_dim[1] - 35, 30, 30), font_icons):
         map_scale += 0.25
         scaled_map = scale_map(map_img, map_original_dim, map_scale)
         scaled_map_dim = scaled_map.get_size()
 
-    if button(ui, 'RESET###RESET', pygame.Rect(0, 100, 100, 50)):
+    if button(ui, 'RESET###RESET', pygame.Rect(screen_dim[0] - 185, screen_dim[1] - 35, 100, 30)):
         map_offset = (0, 0)
         map_scale = 1
         scaled_map = scale_map(map_img, map_original_dim, map_scale)
