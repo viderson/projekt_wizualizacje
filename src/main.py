@@ -23,7 +23,11 @@ pygame.event.set_grab(True)  # Capture all input
 screen = pygame.display.set_mode(size=(720, 640))
 pygame.display.set_caption('TITLE ME!!!')
 clock  = pygame.time.Clock()
-font   = pygame.font.SysFont('./Roboto.ttf', 30)
+font   = pygame.font.Font('./Roboto.ttf', 30)
+
+font_icons = pygame.font.Font('./iconly.ttf', 64)
+ICON_PLUS = '\uE000'
+ICON_MINUS = '\uE001'
 
 map_img = pygame.image.load("./suczki.png").convert()
 map_original_dim = map_img.get_size()
@@ -80,14 +84,16 @@ while is_running:
     ui.mouse_pos = mouse_pos
     screen_dim = screen.get_size()
 
-    ########################################
-    # Render
-    screen.fill((255, 255, 255))
-
     if mouse_dragged:
         offset = (map_offset[0] + 1/map_scale * (mouse_pos[0] - mouse_drag_start[0]),
                   map_offset[1] + 1/map_scale * (mouse_pos[1] - mouse_drag_start[1]))
-    else: offset = map_offset
+    else:
+        offset = map_offset
+
+    ########################################
+    # Render
+    screen.fill((70, 50, 50))
+
     blit_pos = (screen_dim[0]/2 - scaled_map_dim[0]/2 + offset[0]*map_scale,
                 screen_dim[1]/2 - scaled_map_dim[1]/2 + offset[1]*map_scale)
     screen.blit(scaled_map,  blit_pos)
@@ -96,18 +102,17 @@ while is_running:
     screen.blit(fps_text, (0,0))
 
     # UI
-    # TODO(Pawel Hermansdorfer): Get font with these symbols https://iconly.io/
-    if button(ui, "-###SCALE_UP", pygame.Rect(screen_dim[0] - 25, screen_dim[1] - 25, 20, 20)):
+    if button(ui, ICON_MINUS + "###SCALE_DOWN", pygame.Rect(screen_dim[0] - 25, screen_dim[1] - 25, 20, 20), font_icons):
         map_scale -= 0.25
         scaled_map = scale_map(map_img, map_original_dim, map_scale)
         scaled_map_dim = scaled_map.get_size()
 
-    if button(ui, "+###SCALE_DOWN", pygame.Rect(screen_dim[0] - 50, screen_dim[1] - 25, 20, 20)):
+    if button(ui, ICON_PLUS + "###SCALE_UP", pygame.Rect(screen_dim[0] - 50, screen_dim[1] - 25, 20, 20), font_icons):
         map_scale += 0.25
         scaled_map = scale_map(map_img, map_original_dim, map_scale)
         scaled_map_dim = scaled_map.get_size()
 
-    if button(ui, 'CENTER###CENTER', pygame.Rect(0, 0, 200, 100)):
+    if button(ui, 'RESET###RESET', pygame.Rect(0, 100, 100, 50)):
         map_offset = (0, 0)
         map_scale = 1
         scaled_map = scale_map(map_img, map_original_dim, map_scale)

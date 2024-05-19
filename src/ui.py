@@ -10,9 +10,9 @@ class UI:
     font   = None
 
     def __init__(self):
-        self.font = pygame.font.SysFont('./ClearSans-Bold.ttf', 64)
+        self.font = pygame.font.Font('./Roboto.ttf', 64)
 
-def draw_ui_element(ui, text_with_id, rect,
+def draw_ui_element(ui, text_with_id, rect, font=None,
                     draw_bg=False,
                     draw_text=False,
                     draw_border=False,
@@ -37,6 +37,7 @@ def draw_ui_element(ui, text_with_id, rect,
 
 
     roundenss = int(min(rect.width/10, rect.height/10))
+    if font == None: font = ui.font
 
     # Draw shadow
     if draw_shadow:
@@ -58,7 +59,7 @@ def draw_ui_element(ui, text_with_id, rect,
 
     # Draw text
     if draw_text:
-        rendered_text = ui.font.render(text, True, (255, 255, 255))
+        rendered_text = font.render(text, True, (255, 255, 255))
         rect_size = (rect.right - rect.left, rect.bottom - rect.top)
         text_size = rendered_text.get_size()
         margin = (rect_size[0] * 0.1, rect_size[1] * 0.1)
@@ -71,8 +72,8 @@ def draw_ui_element(ui, text_with_id, rect,
     
     return result
 
-def button(ui, text_with_id, rect):
-    return draw_ui_element(ui, text_with_id, rect, draw_bg=True,
-                                                   draw_text=True,
-                                                   draw_shadow=True,
-                                                   draw_border=True)
+def button(ui, text_with_id, rect, font=None):
+    return draw_ui_element(ui, text_with_id, rect, font, draw_bg=True,
+                                                         draw_text=True,
+                                                         draw_shadow=True,
+                                                         draw_border=True)
