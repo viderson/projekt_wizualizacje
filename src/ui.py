@@ -13,10 +13,10 @@ class UI:
         self.font = pygame.font.Font('./Roboto.ttf', 64)
 
 def draw_ui_element(ui, text_with_id, rect, font=None,
-                    draw_bg=False,
-                    draw_text=False,
-                    draw_border=False,
-                    draw_shadow=False):
+                                            draw_bg=False,
+                                            draw_text=False,
+                                            draw_border=False,
+                                            draw_shadow=False):
     result = False
     text, button_id = text_with_id.split("###")
     is_hot = ui.HOT_BUTTON == button_id

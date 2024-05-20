@@ -6,7 +6,7 @@ from ui import *
 def toggle_fullscreen(screen):
   flags = screen.get_flags()
   if flags & pygame.FULLSCREEN:
-      pygame.display.set_mode((640, 720))
+      pygame.display.set_mode((720, 640))
   else:
       pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
@@ -36,7 +36,7 @@ map_scale = 1
 scaled_map = scale_map(map_img, map_original_dim, map_scale)
 scaled_map_dim = scaled_map.get_size()
 
-target_fps = 30
+target_fps = 60
 target_frame_time = 1/target_fps 
 frame_time = 0
 frame_begin_time = time.time()
