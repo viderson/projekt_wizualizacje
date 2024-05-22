@@ -53,7 +53,7 @@ def scale_map_down():
     scaled_map = scale_map(map_img, map_original_dim, map_scale)
     scaled_map_dim = scaled_map.get_size()
 
-target_fps = 60
+target_fps = 120
 target_frame_time = 1/target_fps 
 frame_time = 0
 frame_begin_time = time.time()
@@ -82,9 +82,9 @@ def parse_lat_long(lat_long):
 # latitude(lat)=y and longitude(long)=x
 places_excel['lat'], places_excel['long'] = zip(*places_excel['współrzędne geograficzne'].apply(func=parse_lat_long))
 
-#                    min     max
-min_long, max_long = 22.568, 22.82  # x
-min_lat, max_lat   = 49.568, 49.732 # y
+#                    min      max
+min_long, max_long = 22.567,  22.822  # x
+min_lat, max_lat   = 49.5658, 49.733 # y
 
 def render_name(map_pos, map_dim, lat, long, name):
     # TODO(Pawel Hermansdorfer): Cleanup
@@ -109,7 +109,7 @@ while is_running:
     ui.mouse_up = ui.mouse_down = False
 
     alt_is_pressed = pygame.key.get_pressed()[pygame.K_LALT]
-    for event in pygame.event.get():
+    for event in pygame.event.get(): # replace with pygame.event.wait(). Needs some changes in mouse_drag code
         if event.type == pygame.QUIT:
             is_running = False
 
@@ -165,8 +165,9 @@ while is_running:
                 screen_dim[1]/2 - scaled_map_dim[1]/2 + offset[1]*map_scale)
     screen.blit(scaled_map,  map_blit_pos)
 
-    fps_text = font.render(f'FPS: {1/frame_time if frame_time != 0 else 0:.2f}', True, (0, 255, 0))
-    screen.blit(fps_text, (0,0))
+    # TODO(Pawel Hermansdorfer): Moge some DEBUG_RUN option
+    # fps_text = font.render(f'FPS: {1/frame_time if frame_time != 0 else 0:.2f}', True, (0, 255, 0))
+    # screen.blit(fps_text, (0,0))
 
     places_excel[['lat', 'long', 'nazwa główna']].apply(axis=1, func=lambda x: render_name(map_blit_pos, scaled_map_dim, *x))
 
