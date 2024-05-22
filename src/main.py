@@ -1,5 +1,9 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # Hide pygame welcome message
 import pygame
+import pandas
 import time
+# pip install openpyxl!!! for reading xlsx
 
 from ui import *
 
@@ -18,7 +22,7 @@ def scale_map(original_map, original_size, scale):
 # Init
 pygame.init()
 pygame.font.init()
-pygame.event.set_grab(True)  # Capture all input
+pygame.event.set_grab(True)  # Capture all input (needed for alt)
 
 screen = pygame.display.set_mode(size=(720, 640))
 pygame.display.set_caption('TITLE ME!!!')
@@ -29,12 +33,13 @@ font_icons = pygame.font.Font('./iconly.ttf', 64)
 ICON_PLUS = '\uE000'
 ICON_MINUS = '\uE001'
 
-map_img = pygame.image.load("./suczki.png").convert()
+map_img = pygame.image.load("./mapa_gmina_fredropol.png").convert()
 map_original_dim = map_img.get_size()
 map_offset = (0, 0)
 map_scale = 1
 scaled_map = scale_map(map_img, map_original_dim, map_scale)
 scaled_map_dim = scaled_map.get_size()
+MAP_SCALE_FACTOR = 1.25
 
 target_fps = 60
 target_frame_time = 1/target_fps 
@@ -49,6 +54,33 @@ ui = UI()
 ui.screen = screen
 is_running = True
 
+places_excel = pandas.read_excel("./dane_gmina_fredropol.xlsx")
+
+
+def parse_lat_long(lat_long):
+    def degrees_from_dms(dms): # dms - degrees (°), minutes ('), seconds ('')
+        # TODO(Pawel Hermansdorfer): Clean this
+        degrees = int(dms.split('°')[0])
+        minutes = int(dms.split('°')[1].split("'")[0])
+        seconds = float(dms.split('°')[1].split("'")[1].split('"')[0])
+        return (degrees) + (minutes / 60) + (seconds / 3600)
+    split = lat_long.split(' ')
+    return degrees_from_dms(split[0]), degrees_from_dms(split[1])
+
+places_excel['lat'], places_excel['long'] = zip(*places_excel['współrzędne geograficzne'].apply(func=parse_lat_long))
+min_lat,  max_lat  = min(places_excel['lat']),  max(places_excel['lat'])
+min_long, max_long = min(places_excel['long']), max(places_excel['long'])
+
+def render_name(lat, long, name):
+    # TODO(Pawel Hermansdorfer): Finish
+    def map(a, start1, stop1, start2, end2):
+        return start2 + (((end2 - start2) / (stop1 -start1 )) * (a - start1))
+
+    map_x = map(lat, min_lat, max_lat, 0, max_size[0])
+    map_y = map(long, min_long, max_long, 0, max_size[1])
+
+
+
 while is_running:
     ########################################
     # Inputs
@@ -59,6 +91,7 @@ while is_running:
         if event.type == pygame.QUIT:
             is_running = False
 
+        # TODO(Pawel Hermansdorfer): Cleanup
         elif event.type == pygame.MOUSEBUTTONDOWN:
             ui.mouse_down = True
             if ui.HOT_BUTTON == None and ui.ACTIVE_BUTTON == None:
@@ -92,7 +125,7 @@ while is_running:
 
     ########################################
     # Render
-    screen.fill((70, 50, 50))
+    screen.fill((50, 40, 40))
 
     blit_pos = (screen_dim[0]/2 - scaled_map_dim[0]/2 + offset[0]*map_scale,
                 screen_dim[1]/2 - scaled_map_dim[1]/2 + offset[1]*map_scale)
@@ -103,12 +136,12 @@ while is_running:
 
     # UI
     if button(ui, ICON_MINUS + "###SCALE_DOWN", pygame.Rect(screen_dim[0] - 35, screen_dim[1] - 35, 30, 30), font_icons):
-        map_scale -= 0.25
+        map_scale /= MAP_SCALE_FACTOR
         scaled_map = scale_map(map_img, map_original_dim, map_scale)
         scaled_map_dim = scaled_map.get_size()
 
     if button(ui, ICON_PLUS + "###SCALE_UP", pygame.Rect(screen_dim[0] - 75, screen_dim[1] - 35, 30, 30), font_icons):
-        map_scale += 0.25
+        map_scale *= MAP_SCALE_FACTOR
         scaled_map = scale_map(map_img, map_original_dim, map_scale)
         scaled_map_dim = scaled_map.get_size()
 
