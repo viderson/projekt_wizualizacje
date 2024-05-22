@@ -16,7 +16,7 @@ def toggle_fullscreen(screen):
 
 def scale_map(original_map, original_size, scale):
     target_size = (original_size[0] * scale, original_size[1] * scale)
-    return pygame.transform.smoothscale(original_map, target_size)
+    return pygame.transform.scale(original_map, target_size)
 
 ########################################
 # Init
