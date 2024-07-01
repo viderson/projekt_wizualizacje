@@ -1,5 +1,6 @@
 import re
 import pandas as pd
+from datetime import datetime
 
 def readExcelData(filepath):
     '''
@@ -90,3 +91,15 @@ def getPointDescription(selectedColumns, index):
     '''
     row = getColumns(selectedColumns).head(index).tail(1)
     return row.to_string(header=False, index=False)
+
+
+def getTimeStamps(i):
+    """
+    Funkcja wczytuje znaczniki czasowe z pliku Excel.
+
+    :param filepath: Ścieżka do pliku Excel.
+    :param time_column: Nazwa kolumny zawierającej znaczniki czasowe.
+    :return: Lista znaczników czasowych.
+    """
+    data['ważna od'] = data['ważna od'].apply(pd.to_datetime)
+    return data.loc[i]['ważna od'].isoformat()

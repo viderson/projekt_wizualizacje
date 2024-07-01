@@ -1,12 +1,12 @@
 import folium
 import webbrowser
-
+import pandas as pd
 from folium.plugins import Search, TimestampedGeoJson
 
-from dataHandler import readExcelData, getCoordinates, getBounds, getPointDescription
+from dataHandler import readExcelData, getCoordinates, getBounds, getPointDescription, getTimeStamps
 
 filepath = 'dane_gmina_fredropol.xlsx'
-readExcelData(filepath)
+data = readExcelData(filepath)
 coordinates_list = getCoordinates()
 
 map_fedropol = folium.Map(location=coordinates_list[0], zoom_start=12)
@@ -17,7 +17,6 @@ for i, coord in enumerate(coordinates_list):
     popup_text = getPointDescription(['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu'], i)
     color = None
     icon = None
-
     if 'las' in popup_text:
         color = 'green'
         icon = "https://api.geoapify.com/v1/icon/?type=material&color=%230c6f08&icon=tree&iconType=awesome&iconSize=large&scaleFactor=2&apiKey=769fdc58c4cc45b3a87a679303341049"
@@ -62,6 +61,7 @@ for i, coord in enumerate(coordinates_list):
             "coordinates": coord[::-1]
         },
         "properties": {
+            "time" : getTimeStamps(i),
             "name" : popup_text,
             "popup": popup_text,
             "markerColor" : color,
@@ -75,16 +75,19 @@ for i, coord in enumerate(coordinates_list):
     }
     features.append(feature)
 
+feature_collection = {
+    'type': 'FeatureCollection',
+    'features': features
+}
+
+
 gjson = folium.GeoJson(
-    {
-        "type": "FeatureCollection",
-        "features": features
-    },
+    feature_collection,
+    marker=folium.Circle(radius=0, fill_color="orange", fill_opacity=0.0, color="black", weight=0), # Jak się tego nie zrobi to przy warstwie search będą siię wyświetlały markery GeoJson
     popup= folium.GeoJsonPopup(fields=['name'], labels=False),
     name="geojson",
-    show=False
 ).add_to(map_fedropol)
-folium.LayerControl().add_to(map_fedropol)
+
 # Add a search box to the map
 search = Search(
     layer=gjson,
@@ -92,21 +95,19 @@ search = Search(
     placeholder='Search for a location',
     collapsed=False,
     search_label='name',
+    search_zoom=18,
+    show=False # Nie działa
 ).add_to(map_fedropol)
 
+#layer_control = folium.LayerControl().add_to(map_fedropol)
 
 # Add a timestamped geojson layer for the timeline
-folium.plugins.TimestampedGeoJson(
-    {"type": "FeatureCollection", "features": features},
-    period="P1M",
+TimestampedGeoJson(
+    feature_collection,
+    period='P3M',  # Przykład okresu: 1 minuta, można dostosować do potrzeb
     add_last_point=True,
-    auto_play=False,
-    loop=False,
-    max_speed=1,
-    loop_button=True,
-    date_options="YYYY/MM/DD",
-    time_slider_drag_update=True,
-    duration="P2M",
+    auto_play=True,
+    loop=False
 ).add_to(map_fedropol)
 
 
