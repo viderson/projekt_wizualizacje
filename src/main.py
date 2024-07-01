@@ -1,48 +1,46 @@
-from tkinter import *
-import tkintermapview
+from flask import Flask, request, render_template, redirect, url_for, flash, send_file
+import os
+import subprocess
+from werkzeug.utils import secure_filename
 
-def add_marker(pos: (float, float), text: str) -> None:
-    map_widget.set_marker(pos[0], pos[1], text=text)
+app = Flask(__name__)
 
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'xlsx'}
 
-root = Tk()
-root.geometry("1280x720")
-root.title("TITLE ME!!!")
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-########################################
-# Map
-map_widget = tkintermapview.TkinterMapView(root)
-map_widget.pack(fill=BOTH, expand=True) # Maximize
-map_widget.set_tile_server("https://cartodb-basemaps-1.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}{r}.png", max_zoom=19) # Map provider
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Default pos
-map_widget.set_position(49.695638, 22.745782)
-map_widget.set_zoom(13)
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+            return redirect(url_for('file_selected', filename=filename))
+    return render_template('index.html')
 
-map_widget.pack()
-
-########################################
-# Checkbox list
-# def print_selected():
-#     selected_options = [options[i] for i in range(len(options)) if var_list[i].get() == 1]
-#     print("Selected options:", selected_options)
-# options = ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5"]
-# var_list = []
-# for option in options:
-#     var = IntVar()
-#     checkbox = Checkbutton(root, text=option, variable=var)
-#     checkbox.pack(anchor='ne')
-#     var_list.append(var)
-
-print_button = Button(root, text="Print Selected", command=print_selected)
-print_button.pack(side=RIGHT)
-
-
-########################################
-# Test
-add_marker((49.695300, 22.745213), "Fredropol")
-
+@app.route('/file_selected/<filename>')
+def file_selected(filename):
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    output_file = 'fedropol_map.html'
+    
+    # Uruchamiamy skrypt generate_map.py z przekazanym plikiem
+    subprocess.run(['python', 'generate_map.py', file_path])
+    
+    return send_file(output_file)
 
 if __name__ == '__main__':
-    root.mainloop()
-
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
+    app.run(debug=True)

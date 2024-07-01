@@ -1,3 +1,4 @@
+import sys
 import folium
 import webbrowser
 import pandas as pd
@@ -5,7 +6,7 @@ from folium.plugins import Search, TimestampedGeoJson
 
 from dataHandler import readExcelData, getCoordinates, getBounds, getPointDescription, getTimeStamps
 
-filepath = 'dane_gmina_fredropol.xlsx'
+filepath = sys.argv[1] #'dane_gmina_fredropol.xlsx'
 data = readExcelData(filepath)
 coordinates_list = getCoordinates()
 
@@ -112,6 +113,6 @@ TimestampedGeoJson(
 
 
 map_fedropol.save("fedropol_map.html")
-webbrowser.open("fedropol_map.html")
+#webbrowser.open("fedropol_map.html")
 
-print("Mapa została zapisana jako fedropol_map.html i otwarta w przeglądarce")
+#print("Mapa została zapisana jako fedropol_map.html i otwarta w przeglądarce")
