@@ -9,7 +9,7 @@
 <div style="text-align: center; margin-top: 50px;">
     <h1>Wybierz plik XLSX</h1>
     <form method="post" enctype="multipart/form-data">
-        <input type="file" name="file">
+        <input type="file" name="file" accept=".xlsx">
         <input type="submit" value="Wczytaj">
     </form>
     {% with messages = get_flashed_messages() %}

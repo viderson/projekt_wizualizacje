@@ -135,4 +135,4 @@ TimestampedGeoJson(
 folium.LayerControl(collapsed=False).add_to(map_fedropol)
 
 map_fedropol.save("fedropol_map.html")
-webbrowser.open("fedropol_map.html")
+#webbrowser.open("fedropol_map.html")
