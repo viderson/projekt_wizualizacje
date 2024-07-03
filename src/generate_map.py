@@ -4,7 +4,7 @@ import webbrowser
 import pandas as pd
 from folium.plugins import Search, TimestampedGeoJson, FeatureGroupSubGroup
 
-from data_handler import readExcelData, getCoordinates, getBounds, getPointDescription, getTimeStamps
+from dataHandler import readExcelData, getCoordinates, getBounds, getPointDescription, getTimeStamps
 
 filepath = sys.argv[1]
 data = readExcelData(filepath)
