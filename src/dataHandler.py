@@ -84,13 +84,19 @@ def getBounds(coordinates_list):
 def getPointDescription(selectedColumns, index):
     '''
     Tworzy popup dla danego punktu
-    Przykład użycia: folium.features.Circle(coord, radius=40, color='red', fill=True, popup=f"{dataHandler.getPointDescription(['nazwa główna', 'rodzaj obiektu'], i)}", fill_color='pink', fill_opacity=0.4).add_to(m)
-    :param selectedColumns:
-    :param index:
-    :return:
+    :param selectedColumns: lista nazw wybranych kolumn
+    :param index: indeks punktu
+    :return: tekst popupu
     '''
-    row = getColumns(selectedColumns).head(index).tail(1)
-    return row.to_string(header=False, index=False)
+    row = getColumns(selectedColumns).iloc[index]
+    popup_text = f"""
+        <div style="font-family: Arial, sans-serif; padding: 10px;">
+            <h4 style="margin-bottom: 8px;">{row['nazwa główna']}</h4>
+            <p><b>Typ obiektu:</b> {row['rodzaj obiektu']}</p>
+            <p><b>Identyfikator:</b> {row['identyfikator PRNG']}</p>
+        </div>
+    """
+    return popup_text
 
 
 def getTimeStamps(i):
