@@ -25,6 +25,7 @@ groups = {
     'pass': folium.plugins.FeatureGroupSubGroup(main_group, 'przełęcz', show=True).add_to(map_fedropol),
     'natural_region': folium.plugins.FeatureGroupSubGroup(main_group, 'region naturalny', show=True).add_to(map_fedropol),
     'historical_settlement': folium.plugins.FeatureGroupSubGroup(main_group, 'uroczysko-dawna miejscowość', show=True).add_to(map_fedropol),
+    'undefined' : folium.plugins.FeatureGroupSubGroup(main_group, 'undefinded', show=True).add_to(map_fedropol)
 }
 
 default_icon = "https://api.geoapify.com/v1/icon/?type=material&color=%230c6f08&icon=help&iconType=awesome&iconSize=large&scaleFactor=2&apiKey=769fdc58c4cc45b3a87a679303341049"
@@ -73,6 +74,10 @@ for i, coord in enumerate(coordinates_list):
         color = 'beige'
         icon = "https://api.geoapify.com/v1/icon/?type=material&color=%238f3d3d&icon=home&iconType=awesome&iconSize=large&scaleFactor=2&apiKey=769fdc58c4cc45b3a87a679303341049"
         group = groups['historical_settlement']
+    else:
+        color = 'black'
+        icon = 'https://api.geoapify.com/v1/icon/?type=material&color=%23040404&icon=star&iconType=awesome&scaleFactor=2&apiKey=769fdc58c4cc45b3a87a679303341049'
+        group = groups['undefined']
 
     
     feature = {
