@@ -4,7 +4,7 @@ import webbrowser
 import pandas as pd
 from folium.plugins import Search, TimestampedGeoJson, FeatureGroupSubGroup
 
-from dataHandler import readExcelData, getCoordinates, getBounds, getPointDescription, getTimeStamps
+from dataHandler import readExcelData, getCoordinates, getBounds, getPointDescription, getTimeStamps, formatPopup
 
 filepath = sys.argv[1]
 data = readExcelData(filepath)
@@ -31,7 +31,8 @@ default_icon = "https://api.geoapify.com/v1/icon/?type=material&color=%230c6f08&
 
 features = []
 for i, coord in enumerate(coordinates_list):
-    popup_text = getPointDescription(['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu'], i)
+    popup_text = formatPopup(getPointDescription(['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu'], i).sum())
+    name = getPointDescription(['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu'], i).to_string(header=False, index=False)
     color = None
     icon = default_icon
     group = main_group
@@ -82,7 +83,7 @@ for i, coord in enumerate(coordinates_list):
         },
         "properties": {
             "time": getTimeStamps(i),
-            "name": popup_text,
+            "name": name,
             "popup": popup_text,
             "markerColor": color,
             "icon": "marker",
@@ -119,7 +120,6 @@ gjson = folium.GeoJson(
     name="geojson",
 ).add_to(map_fedropol)
 
-
 search = Search(
     layer=gjson,
     geom_type='Point',
@@ -129,6 +129,7 @@ search = Search(
     search_zoom=18,
     show=False
 ).add_to(map_fedropol)
+
 
 
 TimestampedGeoJson(

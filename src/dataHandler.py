@@ -81,6 +81,16 @@ def getBounds(coordinates_list):
             min_latitude = coord[0]
     return [(min_latitude, min_longitude), (max_latitude, max_longitude)]
 
+
+def formatPopup(row):
+    popup_text = f"""
+            <div style="font-family: Arial, sans-serif; padding: 10px;">
+                <h4 style="margin-bottom: 8px;">{row['nazwa główna']}</h4>
+                <p><b>Typ obiektu:</b> {row['rodzaj obiektu']}</p>
+                <p><b>Identyfikator:</b> {row['identyfikator PRNG']}</p>
+            </div>
+        """
+    return popup_text
 def getPointDescription(selectedColumns, index):
     '''
     Tworzy popup dla danego punktu
@@ -88,15 +98,8 @@ def getPointDescription(selectedColumns, index):
     :param index: indeks punktu
     :return: tekst popupu
     '''
-    row = getColumns(selectedColumns).iloc[index]
-    popup_text = f"""
-        <div style="font-family: Arial, sans-serif; padding: 10px;">
-            <h4 style="margin-bottom: 8px;">{row['nazwa główna']}</h4>
-            <p><b>Typ obiektu:</b> {row['rodzaj obiektu']}</p>
-            <p><b>Identyfikator:</b> {row['identyfikator PRNG']}</p>
-        </div>
-    """
-    return popup_text
+    row = getColumns(selectedColumns).iloc[[index]]
+    return row
 
 
 def getTimeStamps(i):
