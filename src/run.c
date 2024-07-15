@@ -117,11 +117,11 @@ main(int argc, char **argv)
 
     // Sprintf command together
     char* command = malloc(2048);
-    sprintf(command, "python3 %s/%s", binary_location, "main.py");
+    sprintf(command, "py -3 %s/%s", binary_location, "main.py");
 
     ////////////////////////////////////////
     // Install python
-    int python_instaled = (system("python3 --version > nul") == 0);
+    int python_instaled = (system("py -3 --version > nul") == 0);
     if(!python_instaled)
     {
         printf("Installing python3");
@@ -134,11 +134,11 @@ main(int argc, char **argv)
 #elif LINUX
         // TODO(Pawel Hermansdorfer): Which package manager???
 #endif
-        system("python3 -m ensurepip --upgrade");
+        system("py -3 -m ensurepip --upgrade");
     }
     else
     {
-        printf("Python already installed\n");
+        printf("Python3 already installed\n");
     }
 
     ////////////////////////////////////////
