@@ -121,6 +121,8 @@ main(int argc, char **argv)
 
     ////////////////////////////////////////
     // Install python
+#ifdef SETUP
+
     int python_instaled = (system("py -3 --version > nul") == 0);
     if(!python_instaled)
     {
@@ -194,8 +196,7 @@ main(int argc, char **argv)
             printf("Installing package: %s\n", line);
         }
     }
-
-
+#else // SETUP
     ////////////////////////////////////////
     // Let's kill child :D
     atexit(kill_child);
@@ -231,6 +232,7 @@ main(int argc, char **argv)
         printf("ERRR Creating child");
     }
 #endif
+#endif // Setup
 
     return 0;
 }
