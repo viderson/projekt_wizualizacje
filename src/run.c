@@ -117,11 +117,11 @@ main(int argc, char **argv)
 
     // Sprintf command together
     char* command = malloc(2048);
-    sprintf(command, "python %s/%s", binary_location, "main.py");
+    sprintf(command, "python3 %s/%s", binary_location, "main.py");
 
     ////////////////////////////////////////
     // Install python
-    int python_instaled = (system("python --version > nul") == 0);
+    int python_instaled = (system("python3 --version > nul") == 0);
     if(!python_instaled)
     {
         printf("Installing python3");
