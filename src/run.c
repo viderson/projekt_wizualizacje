@@ -224,7 +224,7 @@ main(int argc, char **argv)
         // Parent
         sleep(1);
         system(OPEN_BROWSER " http://127.0.0.1:5000");
-        pause()
+        pause();
     }
     else
     {
