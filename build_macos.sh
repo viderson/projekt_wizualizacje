@@ -21,6 +21,5 @@ cp $ROOT/src/dataHandler.py $ROOT/bin/MacOS/
 cp $ROOT/src/generate_map.py $ROOT/bin/MacOS/
 cp $ROOT/src/main.py $ROOT/bin/MacOS/
 cp $ROOT/src/requirements.txt $ROOT/bin/MacOS/
-cp $ROOT/src/mapa_gmina_fredropol.png $ROOT/bin/MacOS/
 
 popd
