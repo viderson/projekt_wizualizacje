@@ -130,7 +130,6 @@ main(int argc, char **argv)
 
 #else // RUN
     ////////////////////////////////////////
-    // Let's kill child :D
     atexit(kill_child);
 
     // Fork to run local server on and start browser with app
