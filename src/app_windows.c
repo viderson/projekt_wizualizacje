@@ -2,10 +2,12 @@
 #define APP_WINDOWS_H
 
 
-# include <Windows.h>
+#include <Windows.h>
 
 
-# define OPEN_BROWSER "start"
+#define OPEN_BROWSER "start"
+#define PYTHON "py -3"
+
 
 
 static char*

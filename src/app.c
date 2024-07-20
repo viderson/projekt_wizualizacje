@@ -47,13 +47,13 @@ main(int argc, char **argv)
 
     // Sprintf command together
     char* command = malloc(2048);
-    sprintf(command, "py -3 %s/%s", binary_location, "main.py");
+    sprintf(command, PYTHON " %s/%s", binary_location, "main.py");
 
     ////////////////////////////////////////
     // Install python
 #ifdef SETUP
 
-    int python_instaled = (system("py -3 --version > nul") == 0);
+    int python_instaled = (system(PYTHON " --version > nul") == 0);
     if(!python_instaled)
     {
         printf("Installing python3");
@@ -67,7 +67,7 @@ main(int argc, char **argv)
         system("curl -O https://www.python.org/ftp/python/3.10.0/python-3.10.0-macos11.pkg");
         system("sudo installer -pkg python-3.10.0-macos11.pkg -target /");
 #endif
-        system("py -3 -m ensurepip --upgrade");
+        system(PYTHON " -m ensurepip --upgrade");
     }
     else
     {

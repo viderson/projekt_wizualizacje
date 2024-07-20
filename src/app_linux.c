@@ -2,13 +2,14 @@
 #define APP_LINUX_H
 
 
-# include <unistd.h>
-# include <signal.h>
-# include <sys/types.h>
-# include <sys/wait.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 
-# define OPEN_BROWSER "xdg-open"
+#define OPEN_BROWSER "xdg-open"
+#define PYTHON "python3"
 
 
 static char*

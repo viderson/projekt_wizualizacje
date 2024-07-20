@@ -10,7 +10,8 @@
 # include <limits.h>
 
 
-# define OPEN_BROWSER "open"
+#define OPEN_BROWSER "open"
+#define PYTHON "python3"
 
 
 char*
