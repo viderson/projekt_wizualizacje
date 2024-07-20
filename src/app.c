@@ -64,12 +64,8 @@ main(int argc, char **argv)
         system("setx PATH \"%PATH%\"");
         system("endlocal");
 #elif MACOS | LINUX
-        system("curl -O https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz");
-        system("tar -xvf Python-3.9.1.tgz");
-        system("cd Python-3.9.1");
-        system("./configure --enable-optimizations");
-        system("make");
-        system("sudo make altinstall");
+        system("curl -O https://www.python.org/ftp/python/3.10.0/python-3.10.0-macos11.pkg");
+        system("sudo installer -pkg python-3.10.0-macos11.pkg -target /");
 #endif
         system("py -3 -m ensurepip --upgrade");
     }
