@@ -7,6 +7,7 @@
 
 #define OPEN_BROWSER "start"
 #define PYTHON "py -3"
+#define PIP "pip"
 
 
 

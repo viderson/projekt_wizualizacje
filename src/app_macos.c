@@ -12,6 +12,7 @@
 
 #define OPEN_BROWSER "open"
 #define PYTHON "python3"
+#define PIP "pip3"
 
 
 char*

@@ -96,7 +96,7 @@ main(int argc, char **argv)
         // Check if the package is already installed
 #if WINDOWS
         char installed_command[1024];
-        sprintf(installed_command, "pip show %s 2> nul", line);
+        sprintf(installed_command, PIP " show %s 2> nul", line);
         FILE *pipe = _popen(installed_command, "r");
         char buffer[1024];
         int installed = 0;
@@ -111,7 +111,7 @@ main(int argc, char **argv)
         _pclose(pipe);
 #elif LINUX || MACOS
         char installed_command[1024];
-        sprintf(installed_command, "pip show %s > /dev/null 2>&1", line);
+        sprintf(installed_command, PIP " show %s > /dev/null 2>&1", line);
         int installed = system(installed_command);
 #endif
         if(installed)
