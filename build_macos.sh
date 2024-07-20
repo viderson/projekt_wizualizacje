@@ -12,8 +12,8 @@ fi
 
 pushd $ROOT/bin/MacOS
 
-gcc $ROOT/src/run.c -D SETUP -o setup
-gcc $ROOT/src/run.c -o run
+gcc $ROOT/src/app.c -D SETUP -o setup
+gcc $ROOT/src/app.c -o app
 
 cp -r $ROOT/src/templates $ROOT/bin/MacOS/
 

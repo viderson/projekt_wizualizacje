@@ -7,10 +7,10 @@ if not exist %ROOT%\\bin\\Windows mkdir %ROOT%\\bin\\Windows
 
 pushd %ROOT%\\bin\\Windows
 
-cl %ROOT%\\src\\run.c /DSETUP /Fesetup
-cl %ROOT%\\src\\run.c /Ferun
+cl %ROOT%\\src\\app.c /DSETUP /Fesetup
+cl %ROOT%\\src\\app.c /Ferun
 
-del %ROOT%\\bin\\Windows\\run.obj
+del %ROOT%\\bin\\Windows\\app.obj
 
 if not exist %ROOT%\\bin\\Windows\\templates mkdir %ROOT%\\bin\\Windows\\templates
 xcopy /y /q /s /e %ROOT%\\src\\templates %ROOT%\\bin\\Windows\\templates

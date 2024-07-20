@@ -16,89 +16,19 @@
 # define LINUX 0
 #endif
 
-////////////////////////////////////////
-// Headers
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #if WINDOWS
-# include <Windows.h>
+# include "app_windows.c"
 #elif LINUX
-# include <unistd.h>
-# include <signal.h>
-# include <sys/types.h>
-# include <sys/wait.h>
+# include "app_windows.c"
 #elif MACOS
-# include <unistd.h>
-# include <signal.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <mach-o/dyld.h>
-# include <limits.h>
+# include "app_macos.c"
 #endif
 
 
-////////////////////////////////////////
-// Command to start browser
-#if WINDOWS
-# define OPEN_BROWSER "start"
-#elif LINUX
-# define OPEN_BROWSER "xdg-open"
-#elif MACOS
-# define OPEN_BROWSER "open"
-#endif
-
-////////////////////////////////////////
-// Binary location
-#if WINDOWS
-char*
-get_binary_location(void)
-{
-    char *result = malloc(MAX_PATH * sizeof(char));
-    GetModuleFileName(0, result, MAX_PATH);
-    return(result);
-}
-#elif LINUX
-char*
-get_binary_location(void)
-{
-    char *result = malloc(2048);
-    int len = readlink("/proc/self/exe", result, 2048-1);
-    result[len] = '\0';
-    return(result);
-}
-#elif MACOS
-char*
-get_binary_location(void)
-{
-    char *result = malloc(PATH_MAX);
-    unsigned int result_size = PATH_MAX;
-    _NSGetExecutablePath(result, &result_size);
-    return(result);
-}
-#endif
-
-////////////////////////////////////////
-// Killing child
-#if WINDOWS
-PROCESS_INFORMATION processInfo = {0};
-STARTUPINFO startupInfo = {0};
-void kill_child(void)
-{
-    TerminateProcess(processInfo.hProcess, 0);
-    CloseHandle(processInfo.hProcess);
-    CloseHandle(processInfo.hThread);
-}
-#elif LINUX || MACOS
-pid_t process_id = 0;
-void kill_child(void)
-{
-    kill(process_id, SIGINT);
-}
-#endif
-
-////////////////////////////////////////
 int
 main(int argc, char **argv)
 {
@@ -128,13 +58,15 @@ main(int argc, char **argv)
     {
         printf("Installing python3");
 #if WINDOWS
-        system("winget install -e --id Python.Python.3.12");
-#elif MACOS
-        // install brew
-        system("/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"");
-        system("brew install python");
-#elif LINUX
-        // TODO(Pawel Hermansdorfer): Which package manager???
+        system("curl -o python-3.9.1.exe https://www.python.org/ftp/python/3.9.1/python-3.9.1-amd64.exe");
+        system("python-3.9.1.exe /quiet InstallAllUsers=1 PrependPath=1");
+#elif MACOS | LINUX
+        system("curl -O https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz");
+        system("tar -xvf Python-3.9.1.tgz");
+        system("cd Python-3.9.1");
+        system("./configure --enable-optimizations");
+        system("make");
+        system("sudo make altinstall");
 #endif
         system("py -3 -m ensurepip --upgrade");
     }
@@ -196,7 +128,8 @@ main(int argc, char **argv)
             printf("Installing package: %s\n", line);
         }
     }
-#else // SETUP
+
+#else // RUN
     ////////////////////////////////////////
     // Let's kill child :D
     atexit(kill_child);
