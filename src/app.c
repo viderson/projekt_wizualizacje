@@ -60,6 +60,9 @@ main(int argc, char **argv)
 #if WINDOWS
         system("curl -o python-3.9.1.exe https://www.python.org/ftp/python/3.9.1/python-3.9.1-amd64.exe");
         system("python-3.9.1.exe /quiet InstallAllUsers=1 PrependPath=1");
+        system("setlocal");
+        system("setx PATH \"%PATH%\"");
+        system("endlocal");
 #elif MACOS | LINUX
         system("curl -O https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz");
         system("tar -xvf Python-3.9.1.tgz");
