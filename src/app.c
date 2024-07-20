@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #if WINDOWS
 # include "app_windows.c"
@@ -90,7 +91,15 @@ main(int argc, char **argv)
     while(fgets(line, sizeof(line), requirements_file))
     {
         // Remove newline character from the end of the line
-        line[strcspn(line, "\n")] = 0;
+        // line[strcspn(line, "\n")] = 0;
+        for(int i = 0; i < sizeof(line); ++i)
+        {
+            if(!isalpha(line[i]))
+            {
+                line[i] = '\0';
+                break;
+            }
+        }
 
 
         // Check if the package is already installed
