@@ -128,7 +128,7 @@ def getPointDescription(selectedColumns, index):
     :return: tekst popupu
     '''
     try:
-        row = getColumns(selectedColumns).iloc[[index]]
+        row = getColumns(selectedColumns).iloc[[index]].fillna('brak danych')
         return row
     except Exception as e:
         print(f'Error while getting point description: {e}')
