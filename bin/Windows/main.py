@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for, flash, send_file
-import os, sys
+import os
 import subprocess
 from werkzeug.utils import secure_filename
 
