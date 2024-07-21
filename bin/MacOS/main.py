@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for, flash, send_file
-import os
+import os, sys
 import subprocess
 from werkzeug.utils import secure_filename
 
@@ -36,10 +36,7 @@ def file_selected(filename):
     output_file = 'fedropol_map.html'
     
     # Uruchamiamy skrypt generate_map.py z przekazanym plikiem
-    try:
-        subprocess.run(['python3', 'generate_map.py', file_path])
-    except FileNotFoundError:
-        subprocess.run(['python', 'generate_map.py', file_path])
+    subprocess.run([sys.executable, 'generate_map.py', file_path])
     
     return send_file(output_file)
 
