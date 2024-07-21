@@ -1,26 +1,103 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Wizualizacja danych</title>
+    <link rel="icon" href="https://api.geoapify.com/v1/icon/?type=material&color=%230c6f08&icon=help&iconType=awesome&iconSize=large&scaleFactor=2&apiKey=769fdc58c4cc45b3a87a679303341049" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        label {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        label:hover {
+            background-color: #0056b3;
+        }
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        .messages {
+            margin-top: 20px;
+        }
+        .messages ul {
+            list-style: none;
+            padding: 0;
+        }
+        .messages li {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-<div style="text-align: center; margin-top: 50px;">
-    <h1>Wybierz plik XLSX</h1>
+<div class="container">
+    <h1><i class="fas fa-upload"></i> Wybierz plik XLSX</h1>
     <form method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".xlsx">
+        <label for="file"><i class="fas fa-file-excel"></i> Wybierz plik</label>
+        <input type="file" id="file" name="file" accept=".xlsx" onchange="displayFileName()">
+        <p id="file-name" style="margin-top: 10px;"></p>
         <input type="submit" value="Wczytaj">
     </form>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
+    <div class="messages">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </div>
 </div>
+<script>
+    function displayFileName() {
+        var input = document.getElementById('file');
+        var fileName = input.files[0].name;
+        document.getElementById('file-name').textContent = 'Wybrano plik: ' + fileName;
+    }
+</script>
 </body>
 </html>
