@@ -32,8 +32,8 @@ default_icon = "https://api.geoapify.com/v1/icon/?type=material&color=%230c6f08&
 
 features = []
 for i, coord in enumerate(coordinates_list):
-    popup_text = formatPopup(getPointDescription(['nazwa główna', 'rodzaj obiektu', 'data dokumentu źródłowego'], i).sum())
-    name = getPointDescription(['nazwa główna', 'rodzaj obiektu', 'data dokumentu źródłowego'], i).to_string(header=False, index=False)
+    popup_text = formatPopup(getPointDescription(['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu'], i).sum())
+    name = getPointDescription(['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu'], i).to_string(header=False, index=False)
     color = None
     icon = default_icon
     group = main_group

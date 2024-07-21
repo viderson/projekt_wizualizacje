@@ -67,6 +67,7 @@ main(int argc, char **argv)
 #elif MACOS | LINUX
         system("curl -O https://www.python.org/ftp/python/3.10.0/python-3.10.0-macos11.pkg");
         system("sudo installer -pkg python-3.10.0-macos11.pkg -target /");
+        system("exec bash -l");
 #endif
         system(PYTHON " -m ensurepip --upgrade");
     }
@@ -131,7 +132,7 @@ main(int argc, char **argv)
         {
             // Install the package if it is not installed
             char install_command[1024];
-            sprintf(install_command, "pip install %s", line);
+            sprintf(install_command, PIP " install %s", line);
             system(install_command);
             printf("Installing package: %s\n", line);
         }
