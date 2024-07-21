@@ -36,9 +36,10 @@ def file_selected(filename):
     output_file = 'fedropol_map.html'
     
     # Uruchamiamy skrypt generate_map.py z przekazanym plikiem
-    try:
+    is_python3 = subprocess.run(["python3", "--version"], capture_output=True)
+    if is_python3:
         subprocess.run(['python3', 'generate_map.py', file_path])
-    except FileNotFoundError:
+    else:
         subprocess.run(['python', 'generate_map.py', file_path])
     
     return send_file(output_file)
