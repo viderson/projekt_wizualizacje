@@ -5,7 +5,7 @@ Aby zmienić informacje wyświetlane po kliknięciu w lokalizacje na mapie, wyko
 1. **Modyfikacja pliku `dataHandler.py`:**
    - Otwórz plik `dataHandler.py`.
    - Przejdź do linii 114.
-   - Dodaj następującą linię kodu:
+   - Dodaj poniżej następującą linię kodu:
     ```python
      '<p><b>Wyświetlana_nazwa:</b> {row['nazwa_kolumny']}</p>'
     ```

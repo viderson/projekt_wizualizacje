@@ -4,6 +4,7 @@ import subprocess
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.secret_key = 'supersecretkey'
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'xlsx'}
@@ -17,17 +18,20 @@ def allowed_file(filename):
 def upload_file():
     if request.method == 'POST':
         if 'file' not in request.files:
-            flash('No file part')
+            flash('Nie znaleziono części pliku')
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
-            flash('No selected file')
+            flash('Nie wybrano pliku')
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
             return redirect(url_for('file_selected', filename=filename))
+        else:
+            flash('Nieprawidłowy format pliku. Dozwolone są tylko pliki .xlsx')
+            return redirect(request.url)
     return render_template('index.html')
 
 @app.route('/file_selected/<filename>')

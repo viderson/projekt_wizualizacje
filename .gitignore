@@ -3,3 +3,5 @@
 /src/__pycache__
 src/fedropol_map.html
 src/uploads/dane_gmina_fredropol.xlsx
+bin/Windows/fedropol_map.html
+bin/Windows/uploads/dane_gmina_fredropol.xlsx
