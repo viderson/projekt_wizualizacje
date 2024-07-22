@@ -6,8 +6,9 @@ Aby zmienić informacje wyświetlane po kliknięciu w lokalizacje na mapie, wyko
    - Otwórz plik `dataHandler.py`.
    - Przejdź do linii 114.
    - Dodaj następującą linię kodu:
+    ```python
      '<p><b>Wyświetlana_nazwa:</b> {row['nazwa_kolumny']}</p>'
-
+    ```
      - Zamień `Wyświetlana_nazwa` na nazwę informacji, którą chcesz wyświetlić.
      - Zamień `nazwa_kolumny` na nazwę kolumny z pliku `.xlsx`, z której ta informacja ma być pobrana.
 
