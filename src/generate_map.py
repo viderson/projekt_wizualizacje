@@ -7,6 +7,7 @@ from folium.plugins import Search, TimestampedGeoJson, FeatureGroupSubGroup
 from dataHandler import readExcelData, getCoordinates, getBounds, getPointDescription, getTimeStamps, formatPopup
 
 filepath = sys.argv[1]
+out_file_name = sys.argv[2] # name of output file 
 data = readExcelData(filepath)
 coordinates_list = getCoordinates()
 
@@ -148,5 +149,10 @@ TimestampedGeoJson(
 
 folium.LayerControl(collapsed=True).add_to(map_fedropol)
 
-map_fedropol.save("fedropol_map.html")
+map_fedropol.get_root().script.add_child(folium.Element("""
+window.addEventListener('unload', function (event) {
+	navigator.sendBeacon('/unload');
+});
+"""))
 
+map_fedropol.save(out_file_name)

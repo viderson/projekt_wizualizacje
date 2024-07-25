@@ -70,6 +70,12 @@
             margin-bottom: 10px;
         }
     </style>
+
+    <script>
+	window.addEventListener('unload', function (event) {
+		navigator.sendBeacon('/unload');
+	});
+    </script>
 </head>
 <body>
 <div class="container">

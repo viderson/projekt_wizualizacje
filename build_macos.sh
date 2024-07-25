@@ -2,6 +2,7 @@
 
 ROOT=$(pwd)
 
+
 if [ ! -d $ROOT/bin ]; then
     mkdir $ROOT/bin
 fi
@@ -12,7 +13,10 @@ fi
 
 pushd $ROOT/bin/MacOS
 
+rm -r ./*
+
 gcc $ROOT/src/app_macos.c -o run
+chmod +x $ROOT/bin/MacOS/run
 
 cp -r $ROOT/src/templates $ROOT/bin/MacOS/
 
