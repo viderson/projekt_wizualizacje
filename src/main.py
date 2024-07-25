@@ -43,7 +43,7 @@ def file_selected(filename):
     output_file = GENERATED_FOLDER + 'fedropol_map.html'
     
     # Uruchamiamy skrypt generate_map.py z przekazanym plikiem
-    subprocess.open([sys.executable, main_dir + 'generate_map.py',
+    subprocess.run([sys.executable, main_dir + 'generate_map.py',
 				file_path, # argv 1
 			        output_file]) # argv 2
     return send_file(output_file)
