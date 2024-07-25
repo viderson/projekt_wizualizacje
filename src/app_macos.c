@@ -1,17 +1,19 @@
-# include <unistd.h>
-# include <signal.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <mach-o/dyld.h>
-# include <limits.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <dirent.h>
+
+#include <mach-o/dyld.h>
+#include <limits.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 
 char *main_dir = 0;
-char *main_py = 0;
 
 char python[PATH_MAX] = {0};
 char *python_dir = 0;
@@ -119,6 +121,34 @@ find_pip(void)
 	return(result);
 }
 
+int // bool
+check_package(char *name)
+{
+	int result = 0;
+	DIR *dir = opendir(pip_dir);
+	for(struct dirent *entry = readdir(dir);
+	    entry;
+	    entry = readdir(dir))
+	{
+		if(strcmp(entry->d_name, name) == 0)
+		{
+			result = 1;
+			break;
+		}
+	}
+	return(result);
+}
+
+void
+to_lower(char *str)
+{
+	for(char *c = str; *c; ++c)
+	{
+		*c = tolower(*c);
+	}
+}
+
+
 int
 main(int argc, char **argv)
 {
@@ -134,7 +164,6 @@ main(int argc, char **argv)
     *last_slash_pos = '\0';
 
     main_dir = binary_location;
-    main_py = concat(main_dir, "/main.py");
 	
 
 	// Find/install python3
@@ -172,72 +201,68 @@ main(int argc, char **argv)
 		{
 			printf("[LOG] pip installed: %s\n", pip);
 		}
-    }
+    	}
 	else
 	{
 		printf("[LOG]: found pip: %s\n", pip);
 	}
-#if 0
-
-    // Sprintf command together
-    char* command = malloc(2048);
-    sprintf(command, "python3 %s/%s", binary_location, "main.py");
-
-    ////////////////////////////////////////
-    // Install python
-    int python_instaled = (system("python3 --version > nul") == 0);
-    if(!python_instaled)
-    {
-    }
-    else
-    {
-        printf("Python3 is already installed\n");
-    }
-
-    ////////////////////////////////////////
-    // Install packages
-    char *requirements_location = malloc(2048);
-    sprintf(requirements_location, "%s/%s", binary_location, "requirements.txt");
-    FILE *requirements_file = fopen(requirements_location, "r");
-    if(requirements_file == 0) {
-        printf("Couldn't find requirements.txt");
-        return(0);
-    }
-
-    char line[1024];
-    long len = 0;
-    long read;
-    while(fgets(line, sizeof(line), requirements_file))
-    {
-        // Remove newline character from the end of the line
-        // line[strcspn(line, "\n")] = 0;
-        for(int i = 0; i < sizeof(line); ++i)
-        {
-            if(!isalpha(line[i]))
-            {
-                line[i] = '\0';
-                break;
-            }
-        }
+	pip_dir = dir_from_abs_path(pip);
 
 
-        // Check if the package is already installed
-        char installed_command[1024];
-        sprintf(installed_command, "python3 -m pip show %s > /dev/null 2>&1", line);
-        int installed = system(installed_command);
-        if(installed)
-        {
-            printf("Package %s is already installed.\n", line);
-        }
-        else
-        {
-            // Install the package if it is not installed
-            char install_command[1024];
-            sprintf(install_command, PIP " install %s", line);
-            system(install_command);
-            printf("Installing package: %s\n", line);
-        }
-    }
+
+	struct Package
+	{
+		char *name;
+	} packages[10] = {0};
+	int package_count = 0;
+		
+    	
+    	FILE *requirements_file = fopen(concat(main_dir, "/requirements.txt"), "r");
+    	if(!requirements_file)
+ 	{
+        	printf("[ERROR] Couldn't find requirements.txt");
+		exit(1);
+    	}
+
+    	char line[1024];
+    	long len = 0;
+    	long read;
+    	while(fgets(line, sizeof(line), requirements_file))
+    	{
+        	for(int i = 0; i < sizeof(line); ++i)
+        	{
+            		if(!isalpha(line[i]))
+            		{
+                		line[i] = '\0';
+                		break;
+            		}
+        	}
+		char *package = strdup(line);
+		to_lower(package);
+		packages[package_count++].name = package;
+	}
+
+	char *pip_install =concat(python, " -m pip install ");
+	for(int i = 0; i < package_count; ++i)
+	{
+		if(check_package(packages[i].name))
+		{
+			printf("[LOG] Found package: %s\n", packages[i].name);
+		}
+		else
+		{
+			printf("[LOG] Installing package: %s\n", packages[i].name);
+			system(concat(pip_install, packages[i].name));
+			if(check_package(packages[i].name))
+			{
+				printf("[LOG] Packages installed: %s\n", packages[i].name);
+			}
+			else
+			{
+				printf("[ERROR] Couldn't install package: %s\n", packages[i].name);
+			}
+		}
+	}
 
     atexit(kill_child);
 
@@ -245,7 +270,8 @@ main(int argc, char **argv)
     if((process_id = fork()) == 0)
     {
         // Child
-        system(command);
+	char *main_py = concat(concat( " ", main_dir), "/main.py");
+        system(concat(python, main_py));
     }
     else if(process_id > 0)
     {
@@ -258,7 +284,6 @@ main(int argc, char **argv)
     {
         printf("ERRR Creating child");
     }
-#endif
 
     return(0);
 }
