@@ -242,7 +242,7 @@ main(int argc, char **argv)
 		packages[package_count++].name = package;
 	}
 
-	char *pip_install = concat("sudo ", concat(python, " -m pip install --ignore-installed"));
+	char *pip_install = concat(python, " -m pip install --ignore-installed ");
 	for(int i = 0; i < package_count; ++i)
 	{
 		if(check_package(packages[i].name))
