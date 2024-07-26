@@ -15,7 +15,7 @@
 
 char *main_dir = 0;
 
-char python[PATH_MAX] = {0};
+char python[] = "/usr/bin/python3";
 char *python_dir = 0;
 
 char *pip = 0;
@@ -63,6 +63,7 @@ dir_from_abs_path(char *file_path)
 int // bool
 find_python(void)
 {
+#if 0
 	FILE *python_in_p = popen("which python3", "r");
 	int found_python = 0;
 	if(fgets((char *)python, sizeof(python), python_in_p))
@@ -79,7 +80,10 @@ find_python(void)
 		printf("[ERROR] fgets(python) failed\n");
 		exit(1);
 	}
-	return(found_python);
+#else
+    int result = (system("test -f /usr/bin/python3") == 0);
+#endif
+	return(result);
 }
 
 int // bool
@@ -175,6 +179,7 @@ main(int argc, char **argv)
 		if(!find_python())
 		{
 			printf("[ERROR] Couldn't install python3\n");
+			exit(1);
 		}
 		else
 		{
