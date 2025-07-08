@@ -73,3 +73,46 @@ The program loads structured data from an Excel spreadsheet and overlays it on a
 Developed as part of a university course or a geospatial data processing project.
 
 ---
+
+
+---
+
+## 🧾 Customizing Pop-up Content on the Map
+
+To change the information displayed when clicking on locations in the generated map, follow these steps:
+
+### 1. Modify `dataHandler.py`:
+
+- Open the file `src/dataHandler.py`.
+- Go to line **114**.
+- Add the following line below:
+
+```python
+'<p><b>Displayed_Label:</b> {row['column_name']}</p>'
+```
+
+- Replace `Displayed_Label` with the label you want to show in the popup.
+- Replace `column_name` with the actual column name from the `.xlsx` file.
+
+---
+
+### 2. Modify `generate_map.py`:
+
+- Open the file `src/generate_map.py`.
+- Go to lines **35 and 36**.
+- Inside the square brackets, add your column name:
+
+```python
+# Example:
+popup_text = formatPopup(getPointDescription(['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu', 'column_name'], i).sum())
+name = getPointDescription(['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu', 'column_name'], i).to_string(header=False, index=False)
+```
+
+- Ensure that `column_name` exactly matches the column header in your `.xlsx` spreadsheet.
+
+---
+
+### 3. Regenerate the Map:
+
+After making these edits, re-run the application to regenerate the map and see your updated pop-up content reflected in the browser.
+
