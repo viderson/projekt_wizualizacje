@@ -70,7 +70,7 @@ The program loads structured data from an Excel spreadsheet and overlays it on a
 
 ## 🛠️ Authors
 
-Developed as part of a university course or a geospatial data processing project.
+Developed as part of a university course.
 
 ---
 
