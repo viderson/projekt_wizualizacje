@@ -1,4 +1,3 @@
-
 # 🗺️ Visualization Project: Municipality of Fredropol
 
 This project enables interactive data visualization for the municipality of **Fredropol**, combining tabular data (from Excel) with geospatial map generation.
@@ -7,11 +6,10 @@ This project enables interactive data visualization for the municipality of **Fr
 
 ## 🚀 Features
 
-- Parses data from an Excel file (`dane_gmina_fredropol.xlsx`)
-- Generates interactive HTML maps
-- Supports both Windows and macOS (via `.bat` and `.sh` launcher scripts)
-- Lightweight server with a basic `index.html` template
-- Can be easily extended for other municipalities or datasets
+* Parses data from an Excel file (`dane_gmina_fredropol.xlsx`).
+* Generates interactive HTML maps with markers and pop-ups.
+* Lightweight Flask server for file upload and map display.
+* Easy to extend: add custom data layers, filters, and export formats.
 
 ---
 
@@ -19,100 +17,126 @@ This project enables interactive data visualization for the municipality of **Fr
 
 ```
 projekt_wizualizacje/
-├── build_win32.bat            # Windows launcher script
-├── build_macos.sh             # macOS launcher script
-├── README.md                  # This file
-├── .gitignore
+├── build_win32.bat            # Windows launcher script (optional)
+├── build_macos.sh             # macOS launcher script (optional)
+├── README.md                  # This documentation
+├── .gitignore                 # Git ignore rules
 └── src/
-    ├── main.py                # Main application logic
-    ├── dataHandler.py         # Excel data parser
-    ├── generate_map.py        # Map generation module
-    ├── dane_gmina_fredropol.xlsx  # Input data file
+    ├── main.py                # Flask application entry point
+    ├── dataHandler.py         # Excel data parser and HTML formatter
+    ├── generate_map.py        # Map generation module using Folium
+    ├── dane_gmina_fredropol.xlsx  # Sample input data file
     ├── requirements.txt       # Python dependencies
-    ├── app_windows.c          # Windows-specific C module (optional)
-    ├── app_macos.c            # macOS-specific C module (optional)
-    └── templates/
-        └── index.html         # HTML template for map display
+    ├── templates/
+    │   └── index.html         # Basic upload form template
+    └── venv/                  # Virtual environment (not in Git)
 ```
 
 ---
 
 ## ✅ Requirements
 
-- Python 3.8+
-- Required packages: `pandas`, `folium`, `openpyxl`, `flask`
+* **Python** 3.8+
+* Python packages:
 
-Install them using:
+  * `pandas`
+  * `numpy`
+  * `flask`
+  * `folium`
+  * `openpyxl`
+
+Install dependencies:
 
 ```bash
-pip install -r src/requirements.txt
+pip install -r requirements.txt
 ```
 
 ---
 
 ## ▶️ How to Run
 
-From inside the `src/` directory:
+1. **Clone the repository**
 
-```bash
-python main.py
-```
+   ```bash
+   git clone https://github.com/viderson/projekt_wizualizacje.git
+   ```
+2. **Navigate to the source folder**
 
-Then open your browser at `http://127.0.0.1:5000/` to view the map.
+   ```bash
+   cd projekt_wizualizacje/src
+   ```
+3. **Create and activate a virtual environment**
+
+   ```bash
+   python -m venv venv
+   # Windows:
+   .\venv\Scripts\activate
+   # macOS/Linux:
+   source venv/bin/activate
+   ```
+4. **Install dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+5. **Start the Flask server**
+
+   ```bash
+   python main.py
+   ```
+
+   You should see:
+
+   ```text
+   * Running on http://127.0.0.1:5000/
+   ```
+6. **Open in browser**
+   Go to `http://127.0.0.1:5000`, upload your Excel file, and click **Load** to generate the map.
 
 ---
 
 ## 🌍 Usage Example
 
-The program loads structured data from an Excel spreadsheet and overlays it on an interactive map viewable in your browser. You can extend it with new layers, filters, or export options (e.g., PDF, GeoJSON).
+After starting the app, upload any properly structured Excel file and interactively explore the generated map. You can pan, zoom, and click markers to view pop-ups. To extend:
+
+* Add layers directly in `generate_map.py`.
+* Customize pop-up HTML in `dataHandler.py`.
+* Export maps to PDF or GeoJSON by adding export logic.
 
 ---
 
 ## 🛠️ Authors
 
-Developed as part of a university course.
+Maintained by **viderson** [GitHub](https://github.com/viderson).
 
 ---
 
+## 🧾 Customizing Pop-up Content
 
----
+1. **Edit `src/dataHandler.py`**
 
-## 🧾 Customizing Pop-up Content on the Map
+   * Locate the HTML-building logic (e.g., `formatPopup`).
+   * Append new fields:
 
-To change the information displayed when clicking on locations in the generated map, follow these steps:
+     ```python
+     html_elements.append(f"<p><strong>MyLabel:</strong> {row['my_column']}</p>")
+     ```
+   * Ensure `'my_column'` matches the Excel header exactly.
 
-### 1. Modify `dataHandler.py`:
+2. **Edit `src/generate_map.py`**
 
-- Open the file `src/dataHandler.py`.
-- Go to line **114**.
-- Add the following line below:
+   * In the marker loop, include your new column:
 
-```python
-'<p><b>Displayed_Label:</b> {row['column_name']}</p>'
-```
+     ```python
+     popup_html = formatPopup(getPointDescription(
+         ['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu', 'my_column'], i
+     ))
+     ```
 
-- Replace `Displayed_Label` with the label you want to show in the popup.
-- Replace `column_name` with the actual column name from the `.xlsx` file.
+3. **Restart the app**
 
----
+   ```bash
+   python main.py
+   ```
 
-### 2. Modify `generate_map.py`:
-
-- Open the file `src/generate_map.py`.
-- Go to lines **35 and 36**.
-- Inside the square brackets, add your column name:
-
-```python
-# Example:
-popup_text = formatPopup(getPointDescription(['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu', 'column_name'], i).sum())
-name = getPointDescription(['identyfikator PRNG', 'nazwa główna', 'rodzaj obiektu', 'column_name'], i).to_string(header=False, index=False)
-```
-
-- Ensure that `column_name` exactly matches the column header in your `.xlsx` spreadsheet.
-
----
-
-### 3. Regenerate the Map:
-
-After making these edits, re-run the application to regenerate the map and see your updated pop-up content reflected in the browser.
-
+   Upload again to see updated pop-ups.
